@@ -6,7 +6,7 @@ npx ts-node agent/Agent.ts
 
 서버 실행:
 node express_server/expressServer.js
-uvicorn embedding_server:app --reload --port 8000
+uvicorn fastapi_server/embedding_server:app --reload --port 8000
 
 필요 모듈은
 npm install ~~~
