@@ -42,8 +42,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const core_1 = require("@agentica/core");
 const openai_1 = __importDefault(require("openai"));
 const typia_1 = __importDefault(require("typia"));
-const CameraSettingService_1 = require("./functions/CameraSettingService");
 dotenv_1.default.config();
+const CameraSettingService_1 = require("./functions/CameraSettingService");
+const FeatureExplainService_1 = require("./functions/FeatureExplainService");
+const ImageScoreService_1 = require("./functions/ImageScoreService");
 exports.agent = new core_1.Agentica({
     model: "chatgpt",
     vendor: {
@@ -205,5 +207,119 @@ exports.agent = new core_1.Agentica({
             },
             execute: new CameraSettingService_1.CameraSettingService(),
         },
+        {
+            name: "App Feature Explainer",
+            protocol: "class",
+            application: {
+                model: "chatgpt",
+                options: {
+                    reference: false,
+                    strict: false,
+                    separate: null
+                },
+                functions: [
+                    {
+                        name: "listAvailableAppFunctions",
+                        parameters: {
+                            type: "object",
+                            properties: {},
+                            additionalProperties: false,
+                            required: [],
+                            $defs: {}
+                        },
+                        output: {
+                            type: "string"
+                        },
+                        validate: (() => { const __is = input => true; let errors; let _report; return input => {
+                            if (false === __is(input)) {
+                                errors = [];
+                                _report = __typia_transform__validateReport._validateReport(errors);
+                                ((input, _path, _exceptionable = true) => true)(input, "$input", true);
+                                const success = 0 === errors.length;
+                                return success ? {
+                                    success,
+                                    data: input
+                                } : {
+                                    success,
+                                    errors,
+                                    data: input
+                                };
+                            }
+                            return {
+                                success: true,
+                                data: input
+                            };
+                        }; })()
+                    }
+                ]
+            },
+            execute: new FeatureExplainService_1.FeatureExplainService(),
+        },
+        {
+            name: "Image Score Evaluator",
+            protocol: "class",
+            application: {
+                model: "chatgpt",
+                options: {
+                    reference: false,
+                    strict: false,
+                    separate: null
+                },
+                functions: [
+                    {
+                        name: "analyzeImageScore",
+                        parameters: {
+                            type: "object",
+                            properties: {
+                                imagePath: {
+                                    type: "string"
+                                }
+                            },
+                            required: [
+                                "imagePath"
+                            ],
+                            additionalProperties: false,
+                            $defs: {}
+                        },
+                        output: {
+                            type: "string"
+                        },
+                        validate: (() => { const _io0 = input => "string" === typeof input.imagePath; const _vo0 = (input, _path, _exceptionable = true) => ["string" === typeof input.imagePath || _report(_exceptionable, {
+                                path: _path + ".imagePath",
+                                expected: "string",
+                                value: input.imagePath
+                            })].every(flag => flag); const __is = input => "object" === typeof input && null !== input && _io0(input); let errors; let _report; return input => {
+                            if (false === __is(input)) {
+                                errors = [];
+                                _report = __typia_transform__validateReport._validateReport(errors);
+                                ((input, _path, _exceptionable = true) => ("object" === typeof input && null !== input || _report(true, {
+                                    path: _path + "",
+                                    expected: "__type",
+                                    value: input
+                                })) && _vo0(input, _path + "", true) || _report(true, {
+                                    path: _path + "",
+                                    expected: "__type",
+                                    value: input
+                                }))(input, "$input", true);
+                                const success = 0 === errors.length;
+                                return success ? {
+                                    success,
+                                    data: input
+                                } : {
+                                    success,
+                                    errors,
+                                    data: input
+                                };
+                            }
+                            return {
+                                success: true,
+                                data: input
+                            };
+                        }; })()
+                    }
+                ]
+            },
+            execute: new ImageScoreService_1.ImageScoreService(),
+        }
     ],
 });
