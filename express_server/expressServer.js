@@ -15,24 +15,94 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // expressServer.ts
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const multer_1 = __importDefault(require("multer"));
+const fs_1 = __importDefault(require("fs"));
 const Agent_1 = require("../agent/Agent");
 const app = (0, express_1.default)();
 const port = 3000;
+// 이미지 임시 저장 폴더
+const upload = (0, multer_1.default)({ dest: 'uploads/' });
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+/*
 // POST /camera-setting
-app.post("/agent-conversation", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/agent-conversation", async (req, res) => {
     try {
-        const { message } = req.body;
+      const { message } = req.body;
+      const result = await agent.conversate(message);
+      // type === 'execute' 메시지 찾기
+      console.log(result)
+      const executeMsg = result.find((msg: any) => msg.type === "execute");
+
+      // 타입 좁히기
+      if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
+        res.json(executeMsg.value);
+      } else {
+        res.status(404).json({ error: "execute message not found" });
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "agent error" });
+    }
+  });
+*/
+app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        let message;
+        let imagePath;
+        if (req.is("multipart/form-data")) {
+            message = req.body.message;
+            if (req.file) {
+                imagePath = req.file.path;
+                message += ` (imagePath: ${imagePath})`;
+            }
+        }
+        else if (req.is("application/json")) {
+            message = req.body.message;
+        }
+        if (!message) {
+            res.status(400).json({ error: "message is required" });
+            return;
+        }
+        message = `
+        당신은 사용자의 질문에 대해 반드시 적절한 함수를 실행해야 합니다.
+        대화가 길어져도 직접 설명하지 말고, 항상 execute 메시지를 반환하세요.
+      ` + message;
+        console.log(message);
+        // Agentica 호출
         const result = yield Agent_1.agent.conversate(message);
-        // type === 'execute' 메시지 찾기
+        console.log("받은 result:", result);
         const executeMsg = result.find((msg) => msg.type === "execute");
-        // 타입 좁히기
+        // 평가 끝난 뒤 이미지 삭제
+        if (imagePath) {
+            fs_1.default.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error("이미지 삭제 실패:", err);
+                }
+                else {
+                    console.log("이미지 삭제 완료:", imagePath);
+                }
+            });
+        }
         if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
-            res.json(executeMsg.value);
+            //res.json(executeMsg.value);
+            res.json({
+                function: ((_a = executeMsg.operation) === null || _a === void 0 ? void 0 : _a.name) || "unknown",
+                result: executeMsg.value
+            });
         }
         else {
-            res.status(404).json({ error: "execute message not found" });
+            res.json({
+                function: "noFunction",
+                result: `
+        요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
+        이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
+        1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
+        2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
+        3. 사진 미적 점수 평가 (ex: '사진을 첨부하고' 사진 평가해줘)`
+            });
+            //res.status(404).json({ error: "execute message not found" });
         }
     }
     catch (e) {
