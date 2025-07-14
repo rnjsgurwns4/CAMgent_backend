@@ -7,6 +7,7 @@ from PIL import Image
 import io
 
 from sentence_transformers import SentenceTransformer
+from youtube_url_getter import search_youtube_shorts
 
 # NIMA 관련 함수 임포트
 from model_loader import load_nima_model, predict_score_from_pil
@@ -39,6 +40,12 @@ async def analyze_image(image: UploadFile = File(...)):
         return JSONResponse(content={"score": round(score, 3)})
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+@app.post("/search_youtube")
+async def search_youtube_video(query: Query):
+    url = search_youtube_shorts(query.text)
+    return {"url": url}
+
 
 # 실행 명령어:
 # uvicorn embedding_server:app --reload --port 8000

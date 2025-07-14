@@ -47,7 +47,6 @@ app.post("/agent-conversation", async (req, res) => {
   });
 */
 app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         let message;
         let imagePath;
@@ -87,20 +86,17 @@ app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(
         }
         if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
             //res.json(executeMsg.value);
-            res.json({
-                function: ((_a = executeMsg.operation) === null || _a === void 0 ? void 0 : _a.name) || "unknown",
-                result: executeMsg.value
-            });
+            res.json(executeMsg.value);
         }
         else {
             res.json({
                 function: "noFunction",
-                result: `
-        요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
-        이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
-        1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
-        2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
-        3. 사진 미적 점수 평가 (ex: '사진을 첨부하고' 사진 평가해줘)`
+                result: `요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
+이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
+1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
+2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
+3. 사진 미적 점수 평가 (ex: '사진을 첨부하고' 사진 평가해줘)
+4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)`
             });
             //res.status(404).json({ error: "execute message not found" });
         }

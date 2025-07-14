@@ -8,7 +8,7 @@ dotenv.config();
 import { CameraSettingService } from "./functions/CameraSettingService";
 import { FeatureExplainService } from "./functions/FeatureExplainService";
 import { ImageScoreService } from "./functions/ImageScoreService";
-
+import { SearchYoutubeService } from "./functions/SearchYoutubeService";
 
 
 export const agent = new Agentica({
@@ -36,6 +36,12 @@ export const agent = new Agentica({
         protocol: "class",
         application: typia.llm.application<ImageScoreService, "chatgpt">(),
         execute: new ImageScoreService(),
+      },
+      {
+        name: "YouTube Finder",
+        protocol: "class",
+        application: typia.llm.application<SearchYoutubeService, "chatgpt">(),
+        execute: new SearchYoutubeService(),
       }
     ],
     
