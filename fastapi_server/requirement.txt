@@ -1,4 +1,4 @@
-kf-keras python-multipart
+kf-keras python-multipart isodate
 
 import numpy as np
 from PIL import Image
