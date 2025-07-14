@@ -46,6 +46,7 @@ dotenv_1.default.config();
 const CameraSettingService_1 = require("./functions/CameraSettingService");
 const FeatureExplainService_1 = require("./functions/FeatureExplainService");
 const ImageScoreService_1 = require("./functions/ImageScoreService");
+const SearchYoutubeService_1 = require("./functions/SearchYoutubeService");
 exports.agent = new core_1.Agentica({
     model: "chatgpt",
     vendor: {
@@ -320,6 +321,72 @@ exports.agent = new core_1.Agentica({
                 ]
             },
             execute: new ImageScoreService_1.ImageScoreService(),
+        },
+        {
+            name: "YouTube Finder",
+            protocol: "class",
+            application: {
+                model: "chatgpt",
+                options: {
+                    reference: false,
+                    strict: false,
+                    separate: null
+                },
+                functions: [
+                    {
+                        name: "searchYoutube",
+                        parameters: {
+                            type: "object",
+                            properties: {
+                                situation: {
+                                    type: "string"
+                                }
+                            },
+                            required: [
+                                "situation"
+                            ],
+                            additionalProperties: false,
+                            $defs: {}
+                        },
+                        output: {
+                            type: "string"
+                        },
+                        validate: (() => { const _io0 = input => "string" === typeof input.situation; const _vo0 = (input, _path, _exceptionable = true) => ["string" === typeof input.situation || _report(_exceptionable, {
+                                path: _path + ".situation",
+                                expected: "string",
+                                value: input.situation
+                            })].every(flag => flag); const __is = input => "object" === typeof input && null !== input && _io0(input); let errors; let _report; return input => {
+                            if (false === __is(input)) {
+                                errors = [];
+                                _report = __typia_transform__validateReport._validateReport(errors);
+                                ((input, _path, _exceptionable = true) => ("object" === typeof input && null !== input || _report(true, {
+                                    path: _path + "",
+                                    expected: "__type",
+                                    value: input
+                                })) && _vo0(input, _path + "", true) || _report(true, {
+                                    path: _path + "",
+                                    expected: "__type",
+                                    value: input
+                                }))(input, "$input", true);
+                                const success = 0 === errors.length;
+                                return success ? {
+                                    success,
+                                    data: input
+                                } : {
+                                    success,
+                                    errors,
+                                    data: input
+                                };
+                            }
+                            return {
+                                success: true,
+                                data: input
+                            };
+                        }; })()
+                    }
+                ]
+            },
+            execute: new SearchYoutubeService_1.SearchYoutubeService(),
         }
     ],
 });

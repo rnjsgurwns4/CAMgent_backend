@@ -8,27 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureExplainService = void 0;
-class FeatureExplainService {
-    /**
-*
-*
-* @example "앱 기능 뭐 있어?"
-* @example "이 앱으로 뭐 할 수 있어?"
-* @example "가능한 기능들 알려줘"
-* @example "기능 목록 설명해줘"
-* @example "앱이 지원하는 기능이 뭐야?"
-*/
-    listAvailableAppFunctions() {
+exports.SearchYoutubeService = void 0;
+const axios_1 = __importDefault(require("axios"));
+class SearchYoutubeService {
+    searchYoutube(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            return `이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
-1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
-2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
-3. 사진 미적 점수 평가 (ex: '사진을 첨부하고' 사진 평가해줘)
-4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)
-        `;
+            const { situation } = params;
+            const query = situation + " 잘 찍는 방법";
+            const response = yield axios_1.default.post("http://localhost:8000/search_youtube", { text: query });
+            return response.data.url;
         });
     }
 }
-exports.FeatureExplainService = FeatureExplainService;
+exports.SearchYoutubeService = SearchYoutubeService;
