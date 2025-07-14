@@ -45,5 +45,5 @@ def search_youtube_shorts(keyword):
         if duration <= 240:  # 4분 이하
             return f"https://www.youtube.com/watch?v={video['id']}"
 
-    return "4분 이하인 영상을 찾지 못했습니다."
+    return "영상을 찾지 못했습니다."
 
