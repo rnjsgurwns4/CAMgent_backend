@@ -8,6 +8,7 @@ import io
 
 from sentence_transformers import SentenceTransformer
 from youtube_url_getter import search_youtube_shorts
+from enhance import enhance
 
 # NIMA 관련 함수 임포트
 from model_loader import load_nima_model, predict_score_from_pil
@@ -24,6 +25,9 @@ text_model = SentenceTransformer("jhgan/ko-sroberta-multitask")
 # 텍스트 임베딩용 엔드포인트
 class Query(BaseModel):
     text: str
+
+class ImagePath(BaseModel):
+    image_path: str
 
 @app.post("/embed")
 async def embed(query: Query):
@@ -45,6 +49,12 @@ async def analyze_image(image: UploadFile = File(...)):
 async def search_youtube_video(query: Query):
     url = search_youtube_shorts(query.text)
     return {"url": url}
+
+
+@app.post("/enhance")
+async def enhance_image(data: ImagePath):
+    output_path = enhance(data.image_path)
+    return {"output_path": output_path}
 
 
 # 실행 명령어:

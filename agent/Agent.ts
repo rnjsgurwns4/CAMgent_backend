@@ -9,6 +9,7 @@ import { CameraSettingService } from "./functions/CameraSettingService";
 import { FeatureExplainService } from "./functions/FeatureExplainService";
 import { ImageScoreService } from "./functions/ImageScoreService";
 import { SearchYoutubeService } from "./functions/SearchYoutubeService";
+import { ImageEnhanceService } from "./functions/ImageEnhanceService";
 
 
 export const agent = new Agentica({
@@ -42,6 +43,12 @@ export const agent = new Agentica({
         protocol: "class",
         application: typia.llm.application<SearchYoutubeService, "chatgpt">(),
         execute: new SearchYoutubeService(),
+      },
+      {
+        name: "Image Enhancer",
+        protocol: "class",
+        application: typia.llm.application<ImageEnhanceService, "chatgpt">(),
+        execute: new ImageEnhanceService(),
       }
     ],
     

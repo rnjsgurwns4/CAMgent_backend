@@ -86,10 +86,25 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
     }
 
     if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
-      //res.json(executeMsg.value);
-      res.json(
-        executeMsg.value
-      );
+      if (executeMsg.operation.name === "enhanceImage") {
+        const enhanced_imagePath = executeMsg.value as string;
+    
+        // 이미지 응답
+        res.sendFile(enhanced_imagePath, (err) => {
+          if (err) {
+            console.error("이미지 전송 중 오류:", err);
+            res.status(500).json({ error: "이미지 전송 실패" });
+          } else {
+            // 전송 후 이미지 삭제
+            fs.unlink(enhanced_imagePath, (err) => {
+              if (err) console.error("이미지 삭제 실패:", err);
+            });
+          }
+        });
+      } else {
+        // 이미지 서비스가 아닐 경우 JSON으로 응답
+        res.json(executeMsg.value);
+      }
       
     } else {
       res.json({
@@ -98,8 +113,9 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
 1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
 2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
-3. 사진 미적 점수 평가 (ex: '사진을 첨부하고' 사진 평가해줘)
-4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)`
+3. 사진 미적 점수 평가 (ex: '사진을 첨부' 사진 평가해줘)
+4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)
+5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)`
       })
       //res.status(404).json({ error: "execute message not found" });
     }
