@@ -7,7 +7,7 @@ Created on Mon Jul 14 16:26:38 2025
 
 import requests
 
-API_KEY = ''  # ← 여기 본인의 키로 교체
+API_KEY = 'AIzaSyBtGiodU_8_abqa5_itlFIcJV4CCJx4QY8'  # ← 여기 본인의 키로 교체
 
 import isodate  # ISO 8601 형식의 duration 파싱용
 
