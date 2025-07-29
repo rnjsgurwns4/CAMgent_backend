@@ -57,7 +57,7 @@ export const agent = new Agentica({
   // 대화 테스트
   const main = async () => {
 
-    const result = await agent.conversate("버튜버 사진 찍는 설정 알려줘");
+    const result = await agent.conversate("밤하늘 사진 찍는 설정 알려줘");
     console.log("응답:", result)
   };
   
