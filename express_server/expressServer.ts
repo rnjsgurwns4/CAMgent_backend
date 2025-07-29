@@ -4,7 +4,7 @@ import cors from 'cors';
 import multer from 'multer';
 import fs from "fs";
 import { agent } from '../agent/Agent';
-
+import path from 'path';
 
 
 const app = express();
@@ -45,7 +45,7 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
     let imagePath: string | undefined;
 
     if (req.is("multipart/form-data")) {
-      message = req.body.message;
+      message = req.body.text;
       if (req.file) {
         imagePath = req.file.path;
         message += ` (imagePath: ${imagePath})`;
@@ -87,6 +87,8 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 
     if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
       if (executeMsg.operation.name === "enhanceImage") {
+        /*
+        //사진 보정
         const enhanced_imagePath = executeMsg.value as string;
     
         // 이미지 응답
@@ -101,15 +103,52 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
             });
           }
         });
+        */
+       //사진 보정(base64)
+        const enhanced_imagePath = executeMsg.value as string;
+
+        fs.readFile(enhanced_imagePath, { encoding: 'base64' }, (err, base64Data) => {
+          if (err) {
+            console.error("이미지 읽기 오류:", err);
+            res.status(500).json({ error: "이미지 읽기 실패" });
+          } else {
+            const mimeType = getMimeType(enhanced_imagePath); // 예: image/jpeg
+      
+            res.json({
+              image: `data:${mimeType};base64,${base64Data}`,
+            });
+      
+            // 이미지 파일 삭제
+            fs.unlink(enhanced_imagePath, (err) => {
+              if (err) console.error("이미지 삭제 실패:", err);
+            });
+          }
+        });
+
+      } else if(executeMsg.operation.name === "listAvailableAppFunctions" || executeMsg.operation.name === "analyzeImageScore"){
+        // 기능 리스트 출력 or 이미지 점수
+        res.json({text: executeMsg.value});
+      } else if(executeMsg.operation.name === "getCameraSetting"){
+        //카메라 세팅값
+        res.json({cameraSettings: executeMsg.value});
+      } else if(executeMsg.operation.name === "searchYoutube"){
+        //유튜브 링크 제공
+        res.json({youtubeUrl: executeMsg.value});
       } else {
-        // 이미지 서비스가 아닐 경우 JSON으로 응답
-        res.json(executeMsg.value);
+        res.json({
+          text:`요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
+  이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
+  1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
+  2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
+  3. 사진 미적 점수 평가 (ex: '사진을 첨부' 사진 평가해줘)
+  4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)
+  5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)`
+        })
       }
       
     } else {
       res.json({
-        function: "noFunction",
-        result:`요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
+        text:`요청하시는 기능이 존재하지 않습니다. 밑 기능을 참고해 주세요.
 이 앱은 사진 촬영을 위한 다양한 기능들을 제공합니다.
 1. 앱 기능 설명 (ex: 기능 뭐 있는지 알려줘)
 2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
@@ -129,3 +168,19 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 app.listen(port, () => {
   console.log(`Express server listening on http://localhost:${port}`);
 });
+
+// 이미지 확장자에 따라 MIME 타입 결정
+function getMimeType(filePath: string): string {
+  const ext = path.extname(filePath).toLowerCase();
+  switch (ext) {
+    case '.jpg':
+    case '.jpeg':
+      return 'image/jpeg';
+    case '.png':
+      return 'image/png';
+    case '.gif':
+      return 'image/gif';
+    default:
+      return 'application/octet-stream';
+  }
+}
