@@ -124,7 +124,7 @@ app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(
                     }
                 });
             }
-            else if (executeMsg.operation.name === "listAvailableAppFunctions" || executeMsg.operation.name === "analyzeImageScore") {
+            else if (executeMsg.operation.name === "listAvailableAppFunctions" || executeMsg.operation.name === "analyzeImageScore" || executeMsg.operation.name === "getPhotoTip") {
                 // 기능 리스트 출력 or 이미지 점수
                 res.json({ text: executeMsg.value });
             }
