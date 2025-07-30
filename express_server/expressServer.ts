@@ -8,7 +8,7 @@ import path from 'path';
 
 
 const app = express();
-const port = 3000;
+const port = 9877;
 
 // 이미지 임시 저장 폴더
 const upload = multer({ dest: 'uploads/' });
@@ -106,6 +106,7 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
         */
        //사진 보정(base64)
         const enhanced_imagePath = executeMsg.value as string;
+        
 
         fs.readFile(enhanced_imagePath, { encoding: 'base64' }, (err, base64Data) => {
           if (err) {
@@ -115,7 +116,8 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
             const mimeType = getMimeType(enhanced_imagePath); // 예: image/jpeg
       
             res.json({
-              image: `data:${mimeType};base64,${base64Data}`,
+              
+              image: `${base64Data}`,
             });
       
             // 이미지 파일 삭제
@@ -142,7 +144,8 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
   2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
   3. 사진 미적 점수 평가 (ex: '사진을 첨부' 사진 평가해줘)
   4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)
-  5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)`
+  5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)
+  6. 팁 제공 (ex: ~ 이런 상황에서 사진 어떻게 찍어야 하는지 팁 좀 주라)`
         })
       }
       
@@ -154,7 +157,8 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 2. 상황에 맞는 카메라 설정값 설정 (ex: ~ 찍고 싶어. 설정해줘)
 3. 사진 미적 점수 평가 (ex: '사진을 첨부' 사진 평가해줘)
 4. 참고할 유튜브 영상 제공 (ex: 밤하늘 찍고 싶은데 참고할 유튜브 영상 좀 보여줘)
-5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)`
+5. 이미지 보정 (ex: '사진 첨부' 사진 보정해줘)
+6. 팁 제공 (ex: ~ 이런 상황에서 사진 어떻게 찍어야 하는지 팁 좀 주라)`
       })
       //res.status(404).json({ error: "execute message not found" });
     }
@@ -165,7 +169,7 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Express server listening on http://localhost:${port}`);
 });
 
