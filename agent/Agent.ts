@@ -10,6 +10,7 @@ import { FeatureExplainService } from "./functions/FeatureExplainService";
 import { ImageScoreService } from "./functions/ImageScoreService";
 import { SearchYoutubeService } from "./functions/SearchYoutubeService";
 import { ImageEnhanceService } from "./functions/ImageEnhanceService";
+import { PhotoTipService } from "./functions/PhotoTipService";
 
 
 export const agent = new Agentica({
@@ -49,6 +50,12 @@ export const agent = new Agentica({
         protocol: "class",
         application: typia.llm.application<ImageEnhanceService, "chatgpt">(),
         execute: new ImageEnhanceService(),
+      },
+      {
+        name: "Photo Tip",
+        protocol: "class",
+        application: typia.llm.application<PhotoTipService, "chatgpt">(),
+        execute: new PhotoTipService(),
       }
     ],
     
