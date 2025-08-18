@@ -16,28 +16,6 @@ const upload = multer({ dest: 'uploads/' });
 app.use(cors());
 app.use(express.json());
 
-/*
-// POST /camera-setting
-app.post("/agent-conversation", async (req, res) => {
-    try {
-      const { message } = req.body;
-      const result = await agent.conversate(message);
-      // type === 'execute' 메시지 찾기
-      console.log(result)
-      const executeMsg = result.find((msg: any) => msg.type === "execute");
-
-      // 타입 좁히기
-      if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
-        res.json(executeMsg.value);
-      } else {
-        res.status(404).json({ error: "execute message not found" });
-      }
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "agent error" });
-    }
-  });
-*/
 
 app.post("/agent-conversation", upload.single("image"), async (req, res) => {
   try {
@@ -87,24 +65,7 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 
     if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
       if (executeMsg.operation.name === "enhanceImage") {
-        /*
-        //사진 보정
-        const enhanced_imagePath = executeMsg.value as string;
-    
-        // 이미지 응답
-        res.sendFile(enhanced_imagePath, (err) => {
-          if (err) {
-            console.error("이미지 전송 중 오류:", err);
-            res.status(500).json({ error: "이미지 전송 실패" });
-          } else {
-            // 전송 후 이미지 삭제
-            fs.unlink(enhanced_imagePath, (err) => {
-              if (err) console.error("이미지 삭제 실패:", err);
-            });
-          }
-        });
-        */
-       //사진 보정(base64)
+       
         const enhanced_imagePath = executeMsg.value as string;
         
 
@@ -187,4 +148,5 @@ function getMimeType(filePath: string): string {
     default:
       return 'application/octet-stream';
   }
+
 }
