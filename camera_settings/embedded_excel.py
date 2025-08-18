@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 30 19:47:12 2025
-
-@author: pc
-"""
 
 from sentence_transformers import SentenceTransformer
 import pandas as pd
@@ -30,3 +24,4 @@ for idx, row in df.iterrows():
 
 with open("situation_embeddings.json", "w", encoding="utf-8") as f:
     json.dump(embeddings, f, ensure_ascii=False)
+
