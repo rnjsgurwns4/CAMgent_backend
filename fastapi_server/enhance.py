@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 21 15:43:34 2025
 
-@author: pc
-"""
 
 # enhance.py
 from PIL import Image
@@ -52,3 +47,4 @@ def enhance(image_path):
     sr_image.save(output_path)
 
     return output_path
+
