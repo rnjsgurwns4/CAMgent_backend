@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 14 16:26:38 2025
-
-@author: pc
-"""
 
 import requests
 
-API_KEY = 'AIzaSyBtGiodU_8_abqa5_itlFIcJV4CCJx4QY8'  # ← 여기 본인의 키로 교체
+API_KEY = ''  # ← 여기 본인의 키로 교체
 
 import isodate  # ISO 8601 형식의 duration 파싱용
 
@@ -46,4 +40,5 @@ def search_youtube_shorts(keyword):
             return f"https://www.youtube.com/watch?v={video['id']}"
 
     return "영상을 찾지 못했습니다."
+
 
