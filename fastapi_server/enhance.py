@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jul 21 15:43:34 2025
 
+@author: pc
+"""
 
 # enhance.py
 from PIL import Image
@@ -12,7 +17,7 @@ import numpy as np
 
 def enhance(image_path):
 
-    model_path = 'weights/RealESRGAN_x4plus.pth'
+    model_path = 'weights/RealESRGAN_x2plus.pth'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
 
@@ -47,4 +52,3 @@ def enhance(image_path):
     sr_image.save(output_path)
 
     return output_path
-
