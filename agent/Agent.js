@@ -63,7 +63,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },
@@ -81,97 +81,100 @@ exports.agent = new core_1.Agentica({
                                 "situation"
                             ],
                             additionalProperties: false,
-                            $defs: {}
+                            $defs: {
+                                CameraSetting: {
+                                    type: "object",
+                                    properties: {
+                                        situation: {
+                                            type: "string"
+                                        },
+                                        SENSOR_SENSITIVITY: {
+                                            type: "number"
+                                        },
+                                        SENSOR_EXPOSURE_TIME: {
+                                            type: "number"
+                                        },
+                                        COLOR_CORRECTION_MODE: {
+                                            type: "string"
+                                        },
+                                        COLOR_CORRECTION_GAINS: {
+                                            type: "array",
+                                            items: {
+                                                type: "number"
+                                            }
+                                        },
+                                        LENS_FOCUS_DISTANCE: {
+                                            type: "number"
+                                        },
+                                        CONTROL_AE_EXPOSURE_COMPENSATION: {
+                                            type: "number"
+                                        },
+                                        CONTROL_SCENE_MODE: {
+                                            type: "string"
+                                        },
+                                        CONTROL_AWB_LOCK: {
+                                            type: "boolean"
+                                        },
+                                        CONTROL_AE_LOCK: {
+                                            type: "boolean"
+                                        },
+                                        FLASH_MODE: {
+                                            type: "string"
+                                        },
+                                        CONTROL_AF_REGIONS: {
+                                            type: "string"
+                                        },
+                                        CONTROL_AE_REGIONS: {
+                                            type: "string"
+                                        },
+                                        CONTROL_EFFECT_MODE: {
+                                            type: "string"
+                                        },
+                                        NOISE_REDUCTION_MODE: {
+                                            type: "string"
+                                        },
+                                        TONEMAP_MODE: {
+                                            type: "string"
+                                        },
+                                        CONTROL_AE_ANTIBANDING_MODE: {
+                                            type: "string"
+                                        },
+                                        CONTROL_AE_TARGET_FPS_RANGE: {
+                                            type: "array",
+                                            items: {
+                                                type: "number"
+                                            }
+                                        },
+                                        note: {
+                                            type: "string"
+                                        }
+                                    },
+                                    required: [
+                                        "situation",
+                                        "SENSOR_SENSITIVITY",
+                                        "SENSOR_EXPOSURE_TIME",
+                                        "COLOR_CORRECTION_MODE",
+                                        "COLOR_CORRECTION_GAINS",
+                                        "LENS_FOCUS_DISTANCE",
+                                        "CONTROL_AE_EXPOSURE_COMPENSATION",
+                                        "CONTROL_SCENE_MODE",
+                                        "CONTROL_AWB_LOCK",
+                                        "CONTROL_AE_LOCK",
+                                        "FLASH_MODE",
+                                        "CONTROL_AF_REGIONS",
+                                        "CONTROL_AE_REGIONS",
+                                        "CONTROL_EFFECT_MODE",
+                                        "NOISE_REDUCTION_MODE",
+                                        "TONEMAP_MODE",
+                                        "CONTROL_AE_ANTIBANDING_MODE",
+                                        "CONTROL_AE_TARGET_FPS_RANGE",
+                                        "note"
+                                    ]
+                                }
+                            }
                         },
                         output: {
-                            description: "Current Type: {@link CameraSetting}",
-                            type: "object",
-                            properties: {
-                                situation: {
-                                    type: "string"
-                                },
-                                SENSOR_SENSITIVITY: {
-                                    type: "number"
-                                },
-                                SENSOR_EXPOSURE_TIME: {
-                                    type: "number"
-                                },
-                                COLOR_CORRECTION_MODE: {
-                                    type: "string"
-                                },
-                                COLOR_CORRECTION_GAINS: {
-                                    type: "array",
-                                    items: {
-                                        type: "number"
-                                    }
-                                },
-                                LENS_FOCUS_DISTANCE: {
-                                    type: "number"
-                                },
-                                CONTROL_AE_EXPOSURE_COMPENSATION: {
-                                    type: "number"
-                                },
-                                CONTROL_SCENE_MODE: {
-                                    type: "string"
-                                },
-                                CONTROL_AWB_LOCK: {
-                                    type: "boolean"
-                                },
-                                CONTROL_AE_LOCK: {
-                                    type: "boolean"
-                                },
-                                FLASH_MODE: {
-                                    type: "string"
-                                },
-                                CONTROL_AF_REGIONS: {
-                                    type: "string"
-                                },
-                                CONTROL_AE_REGIONS: {
-                                    type: "string"
-                                },
-                                CONTROL_EFFECT_MODE: {
-                                    type: "string"
-                                },
-                                NOISE_REDUCTION_MODE: {
-                                    type: "string"
-                                },
-                                TONEMAP_MODE: {
-                                    type: "string"
-                                },
-                                CONTROL_AE_ANTIBANDING_MODE: {
-                                    type: "string"
-                                },
-                                CONTROL_AE_TARGET_FPS_RANGE: {
-                                    type: "array",
-                                    items: {
-                                        type: "number"
-                                    }
-                                },
-                                note: {
-                                    type: "string"
-                                }
-                            },
-                            required: [
-                                "situation",
-                                "SENSOR_SENSITIVITY",
-                                "SENSOR_EXPOSURE_TIME",
-                                "COLOR_CORRECTION_MODE",
-                                "COLOR_CORRECTION_GAINS",
-                                "LENS_FOCUS_DISTANCE",
-                                "CONTROL_AE_EXPOSURE_COMPENSATION",
-                                "CONTROL_SCENE_MODE",
-                                "CONTROL_AWB_LOCK",
-                                "CONTROL_AE_LOCK",
-                                "FLASH_MODE",
-                                "CONTROL_AF_REGIONS",
-                                "CONTROL_AE_REGIONS",
-                                "CONTROL_EFFECT_MODE",
-                                "NOISE_REDUCTION_MODE",
-                                "TONEMAP_MODE",
-                                "CONTROL_AE_ANTIBANDING_MODE",
-                                "CONTROL_AE_TARGET_FPS_RANGE",
-                                "note"
-                            ]
+                            $ref: "#/$defs/CameraSetting"
                         },
                         validate: (() => { const _io0 = input => "string" === typeof input.situation; const _vo0 = (input, _path, _exceptionable = true) => ["string" === typeof input.situation || _report(_exceptionable, {
                                 path: _path + ".situation",
@@ -216,7 +219,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },
@@ -264,7 +267,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },
@@ -330,7 +333,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },
@@ -396,7 +399,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },
@@ -462,7 +465,7 @@ exports.agent = new core_1.Agentica({
             application: {
                 model: "chatgpt",
                 options: {
-                    reference: false,
+                    reference: true,
                     strict: false,
                     separate: null
                 },

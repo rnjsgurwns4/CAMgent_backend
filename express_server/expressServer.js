@@ -25,28 +25,6 @@ const port = 9877;
 const upload = (0, multer_1.default)({ dest: 'uploads/' });
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-/*
-// POST /camera-setting
-app.post("/agent-conversation", async (req, res) => {
-    try {
-      const { message } = req.body;
-      const result = await agent.conversate(message);
-      // type === 'execute' 메시지 찾기
-      console.log(result)
-      const executeMsg = result.find((msg: any) => msg.type === "execute");
-
-      // 타입 좁히기
-      if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
-        res.json(executeMsg.value);
-      } else {
-        res.status(404).json({ error: "execute message not found" });
-      }
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "agent error" });
-    }
-  });
-*/
 app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let message;
@@ -68,7 +46,7 @@ app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(
         message = `
         당신은 사용자의 질문에 대해 반드시 적절한 함수를 실행해야 합니다.
         대화가 길어져도 직접 설명하지 말고, 항상 execute 메시지를 반환하세요.
-      ` + message;
+      ` + message + 'dddd';
         console.log(message);
         // Agentica 호출
         const result = yield Agent_1.agent.conversate(message);
@@ -87,24 +65,6 @@ app.post("/agent-conversation", upload.single("image"), (req, res) => __awaiter(
         }
         if (executeMsg && executeMsg.type === "execute" && "value" in executeMsg) {
             if (executeMsg.operation.name === "enhanceImage") {
-                /*
-                //사진 보정
-                const enhanced_imagePath = executeMsg.value as string;
-            
-                // 이미지 응답
-                res.sendFile(enhanced_imagePath, (err) => {
-                  if (err) {
-                    console.error("이미지 전송 중 오류:", err);
-                    res.status(500).json({ error: "이미지 전송 실패" });
-                  } else {
-                    // 전송 후 이미지 삭제
-                    fs.unlink(enhanced_imagePath, (err) => {
-                      if (err) console.error("이미지 삭제 실패:", err);
-                    });
-                  }
-                });
-                */
-                //사진 보정(base64)
                 const enhanced_imagePath = executeMsg.value;
                 fs_1.default.readFile(enhanced_imagePath, { encoding: 'base64' }, (err, base64Data) => {
                     if (err) {

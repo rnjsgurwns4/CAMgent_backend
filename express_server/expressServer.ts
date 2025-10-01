@@ -41,7 +41,7 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
     message = `
         당신은 사용자의 질문에 대해 반드시 적절한 함수를 실행해야 합니다.
         대화가 길어져도 직접 설명하지 말고, 항상 execute 메시지를 반환하세요.
-      ` + message
+      ` + message + 'dddd'
     
       
     
@@ -49,7 +49,9 @@ app.post("/agent-conversation", upload.single("image"), async (req, res) => {
 
     // Agentica 호출
     const result = await agent.conversate(message);
+
     console.log("받은 result:", result);
+    
     const executeMsg = result.find((msg: any) => msg.type === "execute");
 
     // 평가 끝난 뒤 이미지 삭제

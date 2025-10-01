@@ -6,7 +6,7 @@ Created on Mon Jul 21 15:43:34 2025
 """
 
 # enhance.py
-from PIL import Image
+from PIL import Image, ImageOps
 import torch
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
@@ -17,9 +17,9 @@ import numpy as np
 
 def enhance(image_path):
 
-    model_path = 'weights/RealESRGAN_x2plus.pth'
+    model_path = 'fastapi_server/weights/RealESRGAN_x2plus.pth'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
 
     upsampler = RealESRGANer(
         scale=4,
@@ -36,7 +36,11 @@ def enhance(image_path):
     image_path = os.path.join(current_dir, "..", image_path)  # 상위 폴더로 이동
     image_path = os.path.abspath(image_path)
     
-    image = Image.open(image_path).convert('RGB')
+    image = Image.open(image_path)
+    
+    # EXIF 정보를 읽어 이미지를 올바른 방향으로 회전
+    image = ImageOps.exif_transpose(image)
+    image = image.convert('RGB')
     
     img_np = np.array(image)
     

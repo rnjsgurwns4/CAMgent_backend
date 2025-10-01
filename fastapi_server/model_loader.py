@@ -17,7 +17,7 @@ def std_score(scores):
     return (sum([score * ((i - mean) ** 2) for i, score in enumerate(scores, 1)])) ** 0.5
 
 # 모델 로드 함수
-def load_nima_model(weight_path='weights/mobilenet_weights.h5', target_size=(224, 224)):
+def load_nima_model(weight_path='fastapi_server/weights/mobilenet_weights.h5', target_size=(224, 224)):
     with tf.device('/CPU:0'):
         base_model = MobileNet((None, None, 3), alpha=1, include_top=False, pooling='avg', weights=None)
         x = Dropout(0.75)(base_model.output)
@@ -34,5 +34,8 @@ def predict_score_from_pil(img: Image.Image, model, target_size=(224, 224)):
     x = preprocess_input(x)
 
     scores = model.predict(x, batch_size=1, verbose=0)[0]
+    print("--------------")
+    
+    print(scores)
     mean = mean_score(scores)
     return mean  # std_score(scores)도 필요하면 같이 리턴 가능

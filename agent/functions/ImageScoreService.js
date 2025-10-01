@@ -19,9 +19,12 @@ const fs_1 = __importDefault(require("fs"));
 class ImageScoreService {
     analyzeImageScore(params) {
         return __awaiter(this, void 0, void 0, function* () {
+            // ✅ 파라미터 값 출력
+            console.log("[ImageScore] params:", params);
+            console.log("[ImageScore] params.imagePath:", params.imagePath);
             const form = new form_data_1.default();
             form.append("image", fs_1.default.createReadStream(params.imagePath));
-            const response = yield axios_1.default.post("http://localhost:8000/analyze", form, {
+            const response = yield axios_1.default.post("http://127.0.0.1:8000/analyze", form, {
                 headers: form.getHeaders(),
             });
             const score = response.data.score;
